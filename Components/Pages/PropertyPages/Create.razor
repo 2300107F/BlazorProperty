@@ -1,0 +1,121 @@
+﻿@page "/properties/create"
+@using Microsoft.EntityFrameworkCore
+@using BlazorProperty.Domain
+@inject IDbContextFactory<BlazorProperty.Data.BlazorPropertyContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create Property</PageTitle>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white text-center">
+                    <h2><i class="bi bi-house-add"></i> Add New Property</h2>
+                </div>
+                <div class="card-body p-4">
+                    <EditForm method="post" Model="Property" OnValidSubmit="AddProperty" FormName="CreatePropertyForm">
+
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="text-danger" role="alert" />
+
+                        <!-- Address Field -->
+                        <div class="mb-4">
+                            <label for="address" class="form-label fw-bold"><i class="bi bi-geo-alt-fill"></i> Address</label>
+                            <InputText id="address" @bind-Value="Property.Address" class="form-control" placeholder="Enter address" />
+                            <ValidationMessage For="() => Property.Address" class="text-danger" />
+                        </div>
+
+                        <!-- Postal Code Field -->
+                        <div class="mb-4">
+                            <label for="postalcode" class="form-label fw-bold"><i class="bi bi-mailbox"></i> Postal Code</label>
+                            <InputText id="postalcode" @bind-Value="Property.PostalCode" class="form-control" placeholder="Enter postal code" />
+                            <ValidationMessage For="() => Property.PostalCode" class="text-danger" />
+                        </div>
+
+                        <!-- Price Field -->
+                        <div class="mb-4">
+                            <label for="price" class="form-label fw-bold"><i class="bi bi-cash"></i> Price</label>
+                            <InputNumber id="price" @bind-Value="Property.Price" class="form-control" placeholder="Enter price" />
+                            <ValidationMessage For="() => Property.Price" class="text-danger" />
+                        </div>
+
+                        <!-- Property Type Dropdown -->
+                        <div class="mb-4">
+                            <label for="propertytype" class="form-label fw-bold"><i class="bi bi-building"></i> Property Type</label>
+                            <InputSelect id="propertytype" @bind-Value="Property.PropertyType" class="form-control">
+                                <option value="">Select a Property Type</option>
+                                <option value="HDB">HDB</option>
+                                <option value="Condominium">Condominium</option>
+                            </InputSelect>
+                            <ValidationMessage For="() => Property.PropertyType" class="text-danger" />
+                        </div>
+
+                        <!-- Bedrooms -->
+                        <div class="mb-4">
+                            <label for="bedrooms" class="form-label fw-bold"><i class="bi bi-door-open"></i> Bedrooms</label>
+                            <InputNumber id="bedrooms" @bind-Value="Property.Bedrooms" class="form-control" placeholder="Enter number of bedrooms" />
+                            <ValidationMessage For="() => Property.Bedrooms" class="text-danger" />
+                        </div>
+
+                        <!-- Bathrooms -->
+                        <div class="mb-4">
+                            <label for="bathrooms" class="form-label fw-bold"><i class="bi bi-bath"></i> Bathrooms</label>
+                            <InputNumber id="bathrooms" @bind-Value="Property.Bathrooms" class="form-control" placeholder="Enter number of bathrooms" />
+                            <ValidationMessage For="() => Property.Bathrooms" class="text-danger" />
+                        </div>
+
+                        <!-- Sqft -->
+                        <div class="mb-4">
+                            <label for="sqft" class="form-label fw-bold"><i class="bi bi-rulers"></i> Square Feet (sqft)</label>
+                            <InputNumber id="sqft" @bind-Value="Property.Sqft" class="form-control" placeholder="Enter area in sqft" />
+                            <ValidationMessage For="() => Property.Sqft" class="text-danger" />
+                        </div>
+
+                        <!-- Region Dropdown -->
+                        <div class="mb-4">
+                            <label for="regionid" class="form-label fw-bold"><i class="bi bi-map"></i> Region</label>
+                            <InputSelect id="regionid" @bind-Value="Property.RegionId" class="form-control">
+                                <option value="">Select a Region</option>
+                                @foreach (var region in Regions)
+                                {
+                                    <option value="@region.RegionId">@region.RegionName</option>
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="() => Property.RegionId" class="text-danger" />
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-success w-100"><i class="bi bi-plus-circle"></i> Create Property</button>
+                        </div>
+                    </EditForm>
+                </div>
+                <div class="card-footer text-center">
+                    <a href="/properties" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Back to List</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private Property Property { get; set; } = new();
+
+    private List<Region> Regions { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Regions = await context.Region.ToListAsync();
+    }
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddProperty()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Property.Add(Property);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/properties");
+    }
+}
