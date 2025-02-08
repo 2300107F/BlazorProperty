@@ -6,38 +6,98 @@
 @implements IAsyncDisposable
 @inject IDbContextFactory<BlazorProperty.Data.BlazorPropertyContext> DbFactory
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Property Index</PageTitle>
 
-<h1>Index</h1>
+<h1 class="text-center mb-4">Overview of Properties</h1>
 
-<p>
-    <a href="properties/create">Create New</a>
-</p>
+<!-- Create Button -->
+<div class="d-flex justify-content-end mb-3">
+    <a href="properties/create" class="btn btn-primary">
+        <i class="fas fa-plus-circle"></i> Create New Property
+    </a>
+</div>
 
-<QuickGrid Class="table" Items="context.Property">
-    <PropertyColumn Property="property => property.Address" />
-    <PropertyColumn Property="property => property.PostalCode" />
-    <PropertyColumn Property="property => property.Price" />
-    <PropertyColumn Property="property => property.PropertyType" />
-    <PropertyColumn Property="property => property.Bedrooms" />
-    <PropertyColumn Property="property => property.Bathrooms" />
-    <PropertyColumn Property="property => property.Sqft" />
-    <PropertyColumn Property="property => property.RegionId" />
+<QuickGrid TItem="PropertyWithRegion" Class="table table-striped table-bordered" Items="properties">
+    <PropertyColumn Property="property => property.Address">
+        <HeaderTemplate>Address</HeaderTemplate>
+    </PropertyColumn>
+    <PropertyColumn Property="property => property.PostalCode">
+        <HeaderTemplate>Postal Code</HeaderTemplate>
+    </PropertyColumn>
+    <PropertyColumn Property="property => property.Price">
+        <HeaderTemplate>Price</HeaderTemplate>
+    </PropertyColumn>
+    <PropertyColumn Property="property => property.PropertyType">
+        <HeaderTemplate>Property Type</HeaderTemplate>
+    </PropertyColumn>
+    <PropertyColumn Property="property => property.Bedrooms">
+        <HeaderTemplate>Bedrooms</HeaderTemplate>
+    </PropertyColumn>
+    <PropertyColumn Property="property => property.Bathrooms">
+        <HeaderTemplate>Bathrooms</HeaderTemplate>
+    </PropertyColumn>
+    <PropertyColumn Property="property => property.Sqft">
+        <HeaderTemplate>Sqft</HeaderTemplate>
+    </PropertyColumn>
+    <PropertyColumn Property="property => property.RegionName">
+        <HeaderTemplate>Region</HeaderTemplate>
+    </PropertyColumn>
 
     <TemplateColumn Context="property">
-        <a href="@($"properties/edit?propertyid={property.PropertyId}")">Edit</a> |
-        <a href="@($"properties/details?propertyid={property.PropertyId}")">Details</a> |
-        <a href="@($"properties/delete?propertyid={property.PropertyId}")">Delete</a>
+        <div class="btn-group" role="group">
+            <a href="@($"properties/edit?propertyid={property.PropertyId}")" class="btn btn-sm btn-warning" title="Edit Property">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+            <a href="@($"properties/details?propertyid={property.PropertyId}")" class="btn btn-sm btn-info" title="View Details">
+                <i class="fas fa-eye"></i> Details
+            </a>
+            <a href="@($"properties/delete?propertyid={property.PropertyId}")" class="btn btn-sm btn-danger" title="Delete Property">
+                <i class="fas fa-trash-alt"></i> Delete
+            </a>
+        </div>
     </TemplateColumn>
 </QuickGrid>
 
+
+
 @code {
     private BlazorPropertyContext context = default!;
+    private IQueryable<PropertyWithRegion> properties = default!;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         context = DbFactory.CreateDbContext();
+
+        // Keep the query as IQueryable
+        properties = context.Property
+            .Include(p => p.Region) // Include Region
+            .Select(p => new PropertyWithRegion    // LINQ select to project Property and its related region
+                {
+                    PropertyId = p.PropertyId,
+                    Address = p.Address,
+                    PostalCode = p.PostalCode,
+                    Price = p.Price,
+                    PropertyType = p.PropertyType,
+                    Bedrooms = p.Bedrooms,
+                    Bathrooms = p.Bathrooms,
+                    Sqft = p.Sqft,
+                    RegionName = p.Region.RegionName // Get the region name
+                });
     }
 
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
+
+    // Define a DTO to include both property and region info
+    public class PropertyWithRegion
+    {
+        public int PropertyId { get; set; }
+        public string Address { get; set; }
+        public string PostalCode { get; set; }
+        public decimal Price { get; set; }
+        public string PropertyType { get; set; }
+        public int Bedrooms { get; set; }
+        public int Bathrooms { get; set; }
+        public int Sqft { get; set; }
+        public string RegionName { get; set; }
+    }
 }
