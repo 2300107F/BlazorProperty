@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using BlazorProperty.Domain;
+using BlazorProperty.Data;
 using BlazorProperty.Configurations.Entities;
 
 namespace BlazorProperty.Data
 {
-    public class BlazorPropertyContext : DbContext
+    public class BlazorPropertyContext : IdentityDbContext<ApplicationUser>
     {
-        public BlazorPropertyContext (DbContextOptions<BlazorPropertyContext> options)
+        public BlazorPropertyContext(DbContextOptions<BlazorPropertyContext> options)
             : base(options)
         {
         }
