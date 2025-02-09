@@ -9,10 +9,9 @@
 
 @if (property == null)
 {
-    <div class="error-message">
-        <h2>Property Not Found</h2>
-        <p>Sorry, the property you are looking for does not exist.</p>
-        <button class="back-button" @onclick="GoBack">Go Back</button>
+    <div class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Loading property details...</p>
     </div>
 }
 else
@@ -35,7 +34,7 @@ else
             }
             else
             {
-                <img src="https://via.placeholder.com/600" alt="No Image Available" class="property-image" />
+                <img src="images/livingroom_1.jpg" alt="No Image Available" class="property-image" />
             }
         </div>
 
@@ -44,11 +43,24 @@ else
             <p><strong>Bedrooms:</strong> @property.Bedrooms</p>
             <p><strong>Bathrooms:</strong> @property.Bathrooms</p>
             <p><strong>Type:</strong> @property.PropertyType</p>
-            <!--  <p><strong>Description:</strong> </p>  -->
+        </div>
+
+        <!-- Messaging Section -->
+        <div class="messaging-section">
+            <h2>Chat</h2>
+            <div class="chat-messages">
+                @foreach (var msg in messages)
+                {
+                    <div class="message">
+                        <strong>@msg.Sender:</strong> @msg.Content
+                    </div>
+                }
+            </div>
+            <textarea @bind="newMessage" placeholder="Type your message here..." class="message-input"></textarea>
+            <button class="send-button" @onclick="SendMessage">Send Message</button>
         </div>
 
         <button class="back-button" @onclick="GoBack">Back to Listings</button>
-
     </div>
 }
 
@@ -104,9 +116,86 @@ else
         margin-top: 20px;
     }
 
-    .back-button:hover {
-        background: #12243d;
+        .back-button:hover {
+            background: #12243d;
+        }
+
+    .loading-spinner {
+        text-align: center;
+        margin-top: 2rem;
     }
+
+    .spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #1a365d;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto;
+    }
+
+    @@keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .messaging-section {
+        margin-top: 2rem;
+        text-align: left;
+    }
+
+        .messaging-section h2 {
+            font-size: 1.5rem;
+            color: #1a365d;
+            margin-bottom: 1rem;
+        }
+
+    .chat-messages {
+        max-height: 200px;
+        overflow-y: auto;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 1rem;
+        background: #f9f9f9;
+    }
+
+    .message {
+        margin-bottom: 10px;
+    }
+
+        .message strong {
+            color: #1a365d;
+        }
+
+    .message-input {
+        width: 100%;
+        height: 100px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        font-size: 1rem;
+    }
+
+    .send-button {
+        background: #1a365d;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        .send-button:hover {
+            background: #12243d;
+        }
 
     .error-message {
         text-align: center;
@@ -116,8 +205,15 @@ else
 </style>
 
 @code {
-    [Parameter] public int id { get; set; } // Get property ID from the URL
+    [Parameter]
+    public int id { get; set; } // Get property ID from the URL
+
     private Property property;
+    private string newMessage;
+    private List<ChatMessage> messages = new List<ChatMessage>();
+
+    // Simulate the current logged-in user (replace with actual authentication logic)
+    private string currentUser = "user1";
 
     protected override async Task OnInitializedAsync()
     {
@@ -125,10 +221,34 @@ else
         property = await context.Property
             .Include(p => p.PropertyImages)
             .FirstOrDefaultAsync(p => p.PropertyId == id);
+
+        // Load existing messages (you can replace this with actual data fetching logic)
+        messages = new List<ChatMessage>
+        {
+            new ChatMessage { Sender = "user1", Content = "Hello, is this property still available?" },
+            new ChatMessage { Sender = "agent", Content = "Yes, it is! How can I assist you?" }
+        };
     }
 
     private void GoBack()
     {
         NavigationManager.NavigateTo("/all-properties");
+    }
+
+    private void SendMessage()
+    {
+        if (!string.IsNullOrWhiteSpace(newMessage))
+        {
+            // Add the new message to the list
+            messages.Add(new ChatMessage { Sender = currentUser, Content = newMessage });
+            newMessage = string.Empty; // Clear the input box
+        }
+    }
+
+    // Chat message model
+    private class ChatMessage
+    {
+        public string Sender { get; set; }
+        public string Content { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using BlazorProperty.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlazorProperty.Migrations
 {
     [DbContext(typeof(BlazorPropertyContext))]
-    partial class BlazorPropertyContextModelSnapshot : ModelSnapshot
+    [Migration("20250209092814_UpdateDatabase")]
+    partial class UpdateDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,6 +39,9 @@ namespace BlazorProperty.Migrations
 
                     b.Property<DateTime>("DateRegistered")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("DisplayName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -100,8 +106,8 @@ namespace BlazorProperty.Migrations
                         {
                             Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "09f62fba-3037-452b-9e3b-0cb09178ddbc",
-                            DateRegistered = new DateTime(2025, 2, 9, 18, 49, 15, 38, DateTimeKind.Local).AddTicks(8627),
+                            ConcurrencyStamp = "b69fdb0e-4694-45f4-93f0-3e2f8eaea1a6",
+                            DateRegistered = new DateTime(2025, 2, 9, 17, 28, 13, 199, DateTimeKind.Local).AddTicks(8625),
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -109,9 +115,9 @@ namespace BlazorProperty.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAECSkOgSbUZr8YtHPB0wYRzpRNnLonEwxLozeElWN1hwkpiGistcAg75BlbzXzfprcw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEhdaQCI+qvm3zwMSD+n5wbUc62vyg6PC9K9H7tjasRDx74wkq5cMV7Re5IfZx4jMA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "7a8a0282-724b-43e8-b308-83a35a7fdd68",
+                            SecurityStamp = "83689032-1be6-4d2a-a8aa-a4329714187d",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         });
@@ -134,7 +140,7 @@ namespace BlazorProperty.Migrations
 
                     b.HasKey("CompanyId");
 
-                    b.ToTable("Company", (string)null);
+                    b.ToTable("Company");
 
                     b.HasData(
                         new
@@ -173,7 +179,7 @@ namespace BlazorProperty.Migrations
 
                     b.HasIndex("RegionId");
 
-                    b.ToTable("Facility", (string)null);
+                    b.ToTable("Facility");
 
                     b.HasData(
                         new
@@ -215,7 +221,7 @@ namespace BlazorProperty.Migrations
 
                     b.HasIndex("PropertyId");
 
-                    b.ToTable("Inquiry", (string)null);
+                    b.ToTable("Inquiry");
                 });
 
             modelBuilder.Entity("BlazorProperty.Domain.Property", b =>
@@ -257,7 +263,7 @@ namespace BlazorProperty.Migrations
 
                     b.HasIndex("RegionId");
 
-                    b.ToTable("Property", (string)null);
+                    b.ToTable("Property");
 
                     b.HasData(
                         new
@@ -329,7 +335,7 @@ namespace BlazorProperty.Migrations
 
                     b.HasIndex("PropertyId");
 
-                    b.ToTable("PropertyImage", (string)null);
+                    b.ToTable("PropertyImage");
                 });
 
             modelBuilder.Entity("BlazorProperty.Domain.Region", b =>
@@ -350,7 +356,7 @@ namespace BlazorProperty.Migrations
 
                     b.HasKey("RegionId");
 
-                    b.ToTable("Region", (string)null);
+                    b.ToTable("Region");
 
                     b.HasData(
                         new

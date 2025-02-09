@@ -15,63 +15,184 @@
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 @inject RoleManager<IdentityRole> RoleManager
+@rendermode InteractiveServer
 
 <PageTitle>Register</PageTitle>
 
-<h1>Register</h1>
+<div class="register-container">
+    <div class="register-form">
+        <h1 class="register-title">Register</h1>
 
-<div class="row">
-    <div class="col-md-4">
         <StatusMessage Message="@Message" />
+
         <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
             <DataAnnotationsValidator />
-            <h2>Create a new account.</h2>
-            <hr />
-            <ValidationSummary class="text-danger" role="alert" />
-            <div class="form-floating mb-3">
+            <ValidationSummary class="validation-summary" role="alert" />
+
+            <div class="form-group">
+                <label for="email" class="form-label">📧 Email</label>
                 <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                <label for="email">Email</label>
                 <ValidationMessage For="() => Input.Email" class="text-danger" />
             </div>
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.FirstName" class="form-control"
-                           autocomplete="firstname" aria-required="true" placeholder="Bill" />
-                <label for="email">First Name</label>
+
+            <div class="form-group">
+                <label for="firstname" class="form-label">👤 First Name</label>
+                <InputText @bind-Value="Input.FirstName" class="form-control" autocomplete="firstname" aria-required="true" placeholder="Bill" />
                 <ValidationMessage For="() => Input.FirstName" class="text-danger" />
             </div>
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.LastName" class="form-control"
-                           autocomplete="lastname" aria-required="true" placeholder="Gates" />
-                <label for="email">Last Name</label>
+
+            <div class="form-group">
+                <label for="lastname" class="form-label">👤 Last Name</label>
+                <InputText @bind-Value="Input.LastName" class="form-control" autocomplete="lastname" aria-required="true" placeholder="Gates" />
                 <ValidationMessage For="() => Input.LastName" class="text-danger" />
             </div>
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.DisplayName" class="form-control"
-                           autocomplete="displayname" aria-required="true" placeholder="Gates" />
-                <label for="email">Display Name</label>
-                <ValidationMessage For="() => Input.DisplayName" class="text-danger" />
-            </div>
-            <div class="form-floating mb-3">
+
+            <div class="form-group">
+                <label for="password" class="form-label">🔒 Password</label>
                 <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label for="password">Password</label>
                 <ValidationMessage For="() => Input.Password" class="text-danger" />
             </div>
-            <div class="form-floating mb-3">
+
+            <div class="form-group">
+                <label for="confirm-password" class="form-label">🔒 Confirm Password</label>
                 <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label for="confirm-password">Confirm Password</label>
                 <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+
+            <div class="agent-register-link">
+                <p>Are you an Agent? Register here:</p>
+                <a href="/Account/RegisterAgent" class="btn btn-outline-primary">Register as Agent</a>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">
+                <span class="btn-icon">📝</span> Register
+            </button>
         </EditForm>
     </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Use another service to register.</h3>
-            <hr />
-            <ExternalLoginPicker />
-        </section>
+
+    <div class="external-login-section">
+        <h3>Use another service to register</h3>
+        <hr />
+        <ExternalLoginPicker />
     </div>
 </div>
+
+<style>
+    .register-container {
+        max-width: 1000px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: white;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        display: flex;
+        gap: 2rem;
+    }
+
+    .register-form {
+        flex: 1;
+    }
+
+    .register-title {
+        font-size: 2rem;
+        color: #1a365d;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        font-weight: bold;
+        color: #1a365d;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 1rem;
+    }
+
+        .form-control:focus {
+            border-color: #1a365d;
+            box-shadow: 0 0 5px rgba(26, 54, 93, 0.5);
+        }
+
+    .validation-summary {
+        color: #dc3545;
+        margin-bottom: 1.5rem;
+        padding: 0.5rem;
+        border: 1px solid #dc3545;
+        border-radius: 5px;
+        background: #f8d7da;
+    }
+
+    .text-danger {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .agent-register-link {
+        text-align: center;
+        margin: 1.5rem 0;
+    }
+
+    .btn {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 5px;
+        font-size: 1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-primary {
+        background: #1a365d;
+        color: white;
+    }
+
+        .btn-primary:hover {
+            background: #12243d;
+        }
+
+    .btn-outline-primary {
+        border: 1px solid #1a365d;
+        color: #1a365d;
+        background: transparent;
+    }
+
+        .btn-outline-primary:hover {
+            background: #1a365d;
+            color: white;
+        }
+
+    .btn-icon {
+        font-size: 1rem;
+    }
+
+    .external-login-section {
+        flex: 1;
+        padding: 1rem;
+        border-left: 1px solid #ccc;
+    }
+
+        .external-login-section h3 {
+            font-size: 1.5rem;
+            color: #1a365d;
+            margin-bottom: 1rem;
+        }
+</style>
 
 @code {
     private IEnumerable<IdentityError>? identityErrors;
@@ -96,7 +217,6 @@
 
         user.FirstName = Input.FirstName;
         user.LastName = Input.LastName;
-        user.DisplayName = Input.DisplayName;
 
         if (!result.Succeeded)
         {
@@ -174,9 +294,6 @@
         [Display(Name = "Last Name")]
         public string LastName { get; set; } = "";
 
-        [Required]
-        [Display(Name = "Display Name")]
-        public string DisplayName { get; set; } = "";
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]

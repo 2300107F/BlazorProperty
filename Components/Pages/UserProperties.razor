@@ -41,9 +41,7 @@
             {
                 <div class="property-card" @onclick="() => ViewDetails(property.PropertyId)">
                     <div class="property-image-wrapper">
-                        <img src="@(property.PropertyImages?.FirstOrDefault()?.ImageUrl ?? "https://via.placeholder.com/300")" alt="@property.Address" class="property-image" />
-
-
+                        <img src="@(GetDefaultImage(property))" alt="@property.Address" class="property-image" />
                         <span class="property-type">@property.PropertyType</span>
                     </div>
                     <div class="property-details">
@@ -257,4 +255,21 @@
     {
         NavigationManager.NavigateTo($"/properties/details/{id}");
     }
+
+    private string GetDefaultImage(Property property)
+    {
+        if (property.PropertyImages?.Any() == true)
+        {
+            return property.PropertyImages.First().ImageUrl;
+        }
+
+        return property.PropertyType switch
+        {
+            "HDB" => "images/HDB.jpg",
+            "Condominium" => "images/condo_2.jpg",
+            "Landed" => "images/default_landed.jpg",
+            _ => "images/default_property.jpg"
+        };
+    }
+
 }

@@ -1,0 +1,68 @@
+﻿@page "/admin/users"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@using BlazorProperty.Data
+@using BlazorProperty.Domain
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+@inject NavigationManager NavigationManager
+@attribute [Authorize(Roles = "Administrator")]
+<PageTitle>Manage Users</PageTitle>
+
+<h3>Manage Users</h3>
+
+@if (users == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">User Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Roles</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in users)
+            {
+                <tr>
+                    <td>@user.UserName</td>
+                    <td>@user.Email</td>
+                    <td>
+                        @foreach (var role in roles[user.Id])
+                        {
+                            <span>@role</span>
+                        }
+                    </td>
+                    <td>
+                        <!-- Action buttons (e.g., Edit, Delete) -->
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<ApplicationUser> users;
+    private Dictionary<string, List<string>> roles = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+
+
+        users = await UserManager.Users.ToListAsync();
+
+        foreach (var user in users)
+        {
+            var userRoles = await UserManager.GetRolesAsync(user);
+            roles[user.Id] = userRoles.ToList();
+        }
+    }
+
+
+}

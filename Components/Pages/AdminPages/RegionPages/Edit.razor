@@ -1,0 +1,249 @@
+﻿@page "/regions/edit"
+@using Microsoft.EntityFrameworkCore
+@using BlazorProperty.Domain
+@inject IDbContextFactory<BlazorProperty.Data.BlazorPropertyContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit Region</PageTitle>
+
+<div class="edit-region-container">
+    <h1 class="page-title">Edit Region</h1>
+
+    @if (IsLoading)
+    {
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Loading region details...</p>
+        </div>
+    }
+    else if (Region is null)
+    {
+        <div class="error-message">
+            <p>Region not found.</p>
+            <a href="/regions" class="btn btn-secondary">Back to Regions</a>
+        </div>
+    }
+    else
+    {
+        <div class="edit-region-form">
+            <EditForm method="post" Model="Region" OnValidSubmit="UpdateRegion" FormName="editRegionForm" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert" class="validation-summary" />
+
+                <input type="hidden" name="Region.RegionId" value="@Region.RegionId" />
+
+                <div class="form-group">
+                    <label for="regionname" class="form-label">Region Name:</label>
+                    <InputText id="regionname" @bind-Value="Region.RegionName" class="form-control" />
+                    <ValidationMessage For="() => Region.RegionName" class="text-danger" />
+                </div>
+
+                <div class="form-group">
+                    <label for="regiondescription" class="form-label">Region Description:</label>
+                    <InputText id="regiondescription" @bind-Value="Region.RegionDescription" class="form-control" />
+                    <ValidationMessage For="() => Region.RegionDescription" class="text-danger" />
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <span class="btn-icon">💾</span> Save
+                    </button>
+                    <a href="/regions" class="btn btn-secondary">
+                        <span class="btn-icon">❌</span> Cancel
+                    </a>
+                </div>
+            </EditForm>
+        </div>
+    }
+</div>
+
+<style>
+    .edit-region-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: white;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+
+    .page-title {
+        font-size: 2rem;
+        color: #1a365d;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    .edit-region-form {
+        margin-top: 1.5rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        font-weight: bold;
+        color: #1a365d;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 1rem;
+    }
+
+        .form-control:focus {
+            border-color: #1a365d;
+            box-shadow: 0 0 5px rgba(26, 54, 93, 0.5);
+        }
+
+    .validation-summary {
+        color: #dc3545;
+        margin-bottom: 1.5rem;
+        padding: 0.5rem;
+        border: 1px solid #dc3545;
+        border-radius: 5px;
+        background: #f8d7da;
+    }
+
+    .text-danger {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .btn {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 5px;
+        font-size: 1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-primary {
+        background: #1a365d;
+        color: white;
+    }
+
+        .btn-primary:hover {
+            background: #12243d;
+        }
+
+    .btn-secondary {
+        background: #6c757d;
+        color: white;
+    }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+    .btn-icon {
+        font-size: 1rem;
+    }
+
+    .loading-spinner {
+        text-align: center;
+        margin-top: 2rem;
+    }
+
+    .spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #1a365d;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto;
+    }
+
+    @@keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .error-message {
+        text-align: center;
+        color: #dc3545;
+        margin-top: 2rem;
+    }
+
+        .error-message p {
+            margin-bottom: 1rem;
+        }
+</style>
+
+<div>
+    <a href="/regions">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int RegionId { get; set; }
+
+    [SupplyParameterFromForm]
+    private Region? Region { get; set; }
+
+    private bool IsLoading => Region is null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Region ??= await context.Region.FirstOrDefaultAsync(m => m.RegionId == RegionId);
+
+        if (Region is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateRegion()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(Region!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!RegionExists(Region!.RegionId))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/regions");
+    }
+
+    private bool RegionExists(int regionid)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.Region.Any(e => e.RegionId == regionid);
+    }
+}

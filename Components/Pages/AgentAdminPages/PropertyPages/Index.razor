@@ -1,0 +1,197 @@
+﻿@page "/properties"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using BlazorProperty.Domain
+@using BlazorProperty.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<BlazorProperty.Data.BlazorPropertyContext> DbFactory
+
+<PageTitle>Property Listings</PageTitle>
+
+<h1 class="text-center mb-4">Available Properties</h1>
+
+<!-- Create Button -->
+<div class="d-flex justify-content-end mb-3">
+    <a href="properties/create" class="btn btn-add-property">
+        Create New Property
+    </a>
+</div>
+
+<!-- Property Table -->
+<div class="property-table">
+    <QuickGrid TItem="PropertyWithRegion" Class="modern-table" Items="properties">
+        <PropertyColumn Property="property => property.PropertyName">
+            <HeaderTemplate>Property Name</HeaderTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="property => property.Address">
+            <HeaderTemplate>Address</HeaderTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="property => property.Price">
+            <HeaderTemplate>Price (S$)</HeaderTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="property => property.PropertyType">
+            <HeaderTemplate>Property Type</HeaderTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="property => property.Bedrooms">
+            <HeaderTemplate>Bedrooms</HeaderTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="property => property.Bathrooms">
+            <HeaderTemplate>Bathrooms</HeaderTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="property => property.Sqft">
+            <HeaderTemplate>Sqft</HeaderTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="property => property.RegionName">
+            <HeaderTemplate>Region</HeaderTemplate>
+        </PropertyColumn>
+
+        <TemplateColumn>
+            <HeaderTemplate>Actions</HeaderTemplate>
+            <ChildContent Context="property">
+                <div class="btn-group" role="group">
+                    <a href="@($"properties/edit?propertyid={property.PropertyId}")" class="btn btn-sm btn-edit" title="Edit Property">
+                        Edit
+                    </a>
+                    <a href="@($"properties/details?propertyid={property.PropertyId}")" class="btn btn-sm btn-view" title="View Details">
+                        Details
+                    </a>
+                    <a href="@($"properties/delete?propertyid={property.PropertyId}")" class="btn btn-sm btn-delete" title="Delete Property">
+                        Delete
+                    </a>
+                </div>
+            </ChildContent>
+        </TemplateColumn>
+
+
+    </QuickGrid>
+</div>
+
+<!-- Modern Styling -->
+<style>
+    /* Table Container */
+    .property-table {
+        background: #ffffff;
+        padding: 1rem;
+        border-radius: 12px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* QuickGrid Modern Styling */
+    .modern-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .modern-table th {
+        background: #1a365d;
+        color: white;
+        padding: 14px;
+        text-align: left;
+        font-size: 14px;
+    }
+
+    .modern-table td {
+        padding: 12px;
+        border-bottom: 1px solid #ddd;
+        font-size: 14px;
+    }
+
+    .modern-table tbody tr:hover {
+        background-color: #f9f9f9;
+        transition: 0.3s;
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+        display: flex;
+        gap: 8px;
+    }
+
+    .btn {
+        padding: 8px 14px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: bold;
+        display: inline-block;
+        font-size: 14px;
+    }
+
+    .btn-edit {
+        background-color: #f0ad4e;
+        color: white;
+        border-radius: 6px;
+    }
+
+    .btn-view {
+        background-color: #5bc0de;
+        color: white;
+        border-radius: 6px;
+    }
+
+    .btn-delete {
+        background-color: #d9534f;
+        color: white;
+        border-radius: 6px;
+    }
+
+    .btn-add-property {
+        background-color: #28a745;
+        color: white;
+        padding: 10px 16px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .btn:hover {
+        opacity: 0.85;
+    }
+</style>
+
+
+
+@code {
+    private BlazorPropertyContext context = default!;
+    private IQueryable<PropertyWithRegion> properties = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        context = DbFactory.CreateDbContext();
+
+        // Keep the query as IQueryable
+        properties = context.Property
+            .Include(p => p.Region) // Include Region
+            .Select(p => new PropertyWithRegion    // LINQ select to project Property and its related region
+                {
+                    PropertyId = p.PropertyId,
+                    PropertyName = p.PropertyName,
+                    Address = p.Address,
+                    Price = p.Price,
+                    PropertyType = p.PropertyType,
+                    Bedrooms = p.Bedrooms,
+                    Bathrooms = p.Bathrooms,
+                    Sqft = p.Sqft,
+                    RegionName = p.Region.RegionName // Get the region name
+                });
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+
+    // Define a DTO to include both property and region info
+    public class PropertyWithRegion
+    {
+        public int PropertyId { get; set; }
+        public string PropertyName { get; set; }
+        public string Address { get; set; }
+        public decimal Price { get; set; }
+        public string PropertyType { get; set; }
+        public int Bedrooms { get; set; }
+        public int Bathrooms { get; set; }
+        public int Sqft { get; set; }
+        public string RegionName { get; set; }
+    }
+}

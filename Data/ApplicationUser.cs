@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using BlazorProperty.Domain;
+using Microsoft.AspNetCore.Identity;
 
 namespace BlazorProperty.Data
 {
@@ -8,6 +9,7 @@ namespace BlazorProperty.Data
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public DateTime DateRegistered { get; set; } = DateTime.Now;
-        public string? DisplayName { get; set; }
+
+        
     }
 }

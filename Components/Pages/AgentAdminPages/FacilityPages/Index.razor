@@ -1,0 +1,47 @@
+﻿@page "/facilities"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using BlazorProperty.Domain
+@using BlazorProperty.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<BlazorProperty.Data.BlazorPropertyContext> DbFactory
+
+<PageTitle>Facilities</PageTitle>
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">Facilities</h2>
+        </div>
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <a href="facilities/create" class="btn btn-success">Create New</a>
+            </div>
+
+            <QuickGrid Class="table table-hover" Items="context.Facility">
+                <PropertyColumn Title="Facility Name" Property="facility => facility.FacilityName" />
+                <PropertyColumn Title="Description" Property="facility => facility.FacilityDescription" />
+                <PropertyColumn Title="Region ID" Property="facility => facility.RegionId" />
+
+                <TemplateColumn Context="facility">
+                    <div class="btn-group">
+                        <a href="@($"facilities/edit?facilityid={facility.FacilityId}")" class="btn btn-sm btn-outline-primary">Edit</a>
+                        <a href="@($"facilities/details?facilityid={facility.FacilityId}")" class="btn btn-sm btn-outline-info">Details</a>
+                        <a href="@($"facilities/delete?facilityid={facility.FacilityId}")" class="btn btn-sm btn-outline-danger">Delete</a>
+                    </div>
+                </TemplateColumn>
+            </QuickGrid>
+        </div>
+    </div>
+</div>
+
+@code {
+    private BlazorPropertyContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

@@ -1,0 +1,60 @@
+﻿@page "/facilities/details"
+@using Microsoft.EntityFrameworkCore
+@using BlazorProperty.Domain
+@inject IDbContextFactory<BlazorProperty.Data.BlazorPropertyContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Facility Details</PageTitle>
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-info text-white">
+            <h2 class="mb-0">Facility Details</h2>
+        </div>
+        <div class="card-body">
+            @if (facility is null)
+            {
+                <div class="text-center">
+                    <div class="spinner-border text-info" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2"><em>Loading...</em></p>
+                </div>
+            }
+            else
+            {
+                <dl class="row">
+                    <dt class="col-sm-3">Facility Name</dt>
+                    <dd class="col-sm-9">@facility.FacilityName</dd>
+                    <dt class="col-sm-3">Facility Description</dt>
+                    <dd class="col-sm-9">@facility.FacilityDescription</dd>
+                    <dt class="col-sm-3">Region ID</dt>
+                    <dd class="col-sm-9">@facility.RegionId</dd>
+                </dl>
+
+                <div class="d-flex justify-content-between">
+                    <a href="@($"/facilities/edit?facilityid={facility.FacilityId}")" class="btn btn-outline-primary">Edit</a>
+                    <a href="/facilities" class="btn btn-outline-secondary">Back to List</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private Facility? facility;
+
+    [SupplyParameterFromQuery]
+    private int FacilityId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        facility = await context.Facility.FirstOrDefaultAsync(m => m.FacilityId == FacilityId);
+
+        if (facility is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

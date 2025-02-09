@@ -20,6 +20,7 @@ namespace BlazorProperty.Configurations.Entities
                 Bathrooms = 3,
                 Sqft = 1100,
                 //AgentId = 1, // FK reference to Agent
+                //CompanyId = 1,
                 RegionId = 1
             },
             new Property
@@ -33,6 +34,7 @@ namespace BlazorProperty.Configurations.Entities
                 Bathrooms = 2,
                 Sqft = 700,
                 //AgentId = 2, // Fk Reference to Agent
+                //CompanyId = 1,
                 RegionId = 1
             },
             new Property
@@ -46,6 +48,7 @@ namespace BlazorProperty.Configurations.Entities
                 Bathrooms = 2,
                 Sqft = 890,
                 //AgentId = 1,
+                //CompanyId = 1,
                 RegionId = 2,
             },
             new Property
@@ -58,6 +61,7 @@ namespace BlazorProperty.Configurations.Entities
                 Bedrooms = 4,
                 Bathrooms = 2,
                 Sqft = 888,
+                //CompanyId = 2,
                 RegionId = 4,
             }
             );

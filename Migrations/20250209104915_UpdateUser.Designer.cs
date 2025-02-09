@@ -4,6 +4,7 @@ using BlazorProperty.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlazorProperty.Migrations
 {
     [DbContext(typeof(BlazorPropertyContext))]
-    partial class BlazorPropertyContextModelSnapshot : ModelSnapshot
+    [Migration("20250209104915_UpdateUser")]
+    partial class UpdateUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -134,7 +137,7 @@ namespace BlazorProperty.Migrations
 
                     b.HasKey("CompanyId");
 
-                    b.ToTable("Company", (string)null);
+                    b.ToTable("Company");
 
                     b.HasData(
                         new
@@ -173,7 +176,7 @@ namespace BlazorProperty.Migrations
 
                     b.HasIndex("RegionId");
 
-                    b.ToTable("Facility", (string)null);
+                    b.ToTable("Facility");
 
                     b.HasData(
                         new
@@ -215,7 +218,7 @@ namespace BlazorProperty.Migrations
 
                     b.HasIndex("PropertyId");
 
-                    b.ToTable("Inquiry", (string)null);
+                    b.ToTable("Inquiry");
                 });
 
             modelBuilder.Entity("BlazorProperty.Domain.Property", b =>
@@ -257,7 +260,7 @@ namespace BlazorProperty.Migrations
 
                     b.HasIndex("RegionId");
 
-                    b.ToTable("Property", (string)null);
+                    b.ToTable("Property");
 
                     b.HasData(
                         new
@@ -329,7 +332,7 @@ namespace BlazorProperty.Migrations
 
                     b.HasIndex("PropertyId");
 
-                    b.ToTable("PropertyImage", (string)null);
+                    b.ToTable("PropertyImage");
                 });
 
             modelBuilder.Entity("BlazorProperty.Domain.Region", b =>
@@ -350,7 +353,7 @@ namespace BlazorProperty.Migrations
 
                     b.HasKey("RegionId");
 
-                    b.ToTable("Region", (string)null);
+                    b.ToTable("Region");
 
                     b.HasData(
                         new

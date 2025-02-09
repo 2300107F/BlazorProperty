@@ -17,6 +17,8 @@
         public Region Region { get; set; }
         public int RegionId { get; set; }
 
+        //public int CompanyId { get; set; }
+        //public Company Company { get; set; } // Navigation property
 
         public ICollection<Inquiry> PropertiesInquiries { get; set; } = new List<Inquiry>();
 

@@ -1,0 +1,72 @@
+﻿@page "/facilities/delete"
+@using Microsoft.EntityFrameworkCore
+@using BlazorProperty.Domain
+@inject IDbContextFactory<BlazorProperty.Data.BlazorPropertyContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Delete Facility</PageTitle>
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-danger text-white">
+            <h2 class="mb-0">Delete Facility</h2>
+        </div>
+        <div class="card-body">
+            @if (facility is null)
+            {
+                <div class="text-center">
+                    <div class="spinner-border text-danger" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2"><em>Loading...</em></p>
+                </div>
+            }
+            else
+            {
+                <h4>Are you sure you want to delete this?</h4>
+                <hr />
+                <dl class="row">
+                    <dt class="col-sm-3">Facility Name</dt>
+                    <dd class="col-sm-9">@facility.FacilityName</dd>
+                    <dt class="col-sm-3">Facility Description</dt>
+                    <dd class="col-sm-9">@facility.FacilityDescription</dd>
+                    <dt class="col-sm-3">Region ID</dt>
+                    <dd class="col-sm-9">@facility.RegionId</dd>
+                </dl>
+
+                <EditForm method="post" Model="facility" OnValidSubmit="DeleteFacility" FormName="delete" Enhance>
+                    <div class="d-flex justify-content-between">
+                        <a href="/facilities" class="btn btn-outline-secondary">Back to List</a>
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </div>
+                </EditForm>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private Facility? facility;
+
+    [SupplyParameterFromQuery]
+    private int FacilityId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        facility = await context.Facility.FirstOrDefaultAsync(m => m.FacilityId == FacilityId);
+
+        if (facility is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    private async Task DeleteFacility()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Facility.Remove(facility!);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/facilities");
+    }
+}

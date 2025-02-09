@@ -1,0 +1,47 @@
+﻿@page "/regions/create"
+@using Microsoft.EntityFrameworkCore
+@using BlazorProperty.Domain
+@inject IDbContextFactory<BlazorProperty.Data.BlazorPropertyContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create Region</PageTitle>
+
+<div class="container mt-4">
+    <h1 class="display-4">Create Region</h1>
+    <hr />
+    <div class="row">
+        <div class="col-md-6">
+            <EditForm method="post" Model="Region" OnValidSubmit="AddRegion" FormName="create" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary class="text-danger" role="alert" />
+                <div class="mb-3">
+                    <label for="regionname" class="form-label">Region Name:</label>
+                    <InputText id="regionname" @bind-Value="Region.RegionName" class="form-control" placeholder="Enter region name" />
+                    <ValidationMessage For="() => Region.RegionName" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="regiondescription" class="form-label">Region Description:</label>
+                    <InputText id="regiondescription" @bind-Value="Region.RegionDescription" class="form-control" placeholder="Enter region description" />
+                    <ValidationMessage For="() => Region.RegionDescription" class="text-danger" />
+                </div>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button type="submit" class="btn btn-primary me-md-2">Create</button>
+                    <a href="/regions" class="btn btn-outline-secondary">Back to List</a>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private Region Region { get; set; } = new();
+
+    private async Task AddRegion()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Region.Add(Region);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/regions");
+    }
+}

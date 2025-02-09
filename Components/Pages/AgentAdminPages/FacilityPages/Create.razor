@@ -1,0 +1,57 @@
+﻿@page "/facilities/create"
+@using Microsoft.EntityFrameworkCore
+@using BlazorProperty.Domain
+@inject IDbContextFactory<BlazorProperty.Data.BlazorPropertyContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create Facility</PageTitle>
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">Create Facility</h2>
+        </div>
+        <div class="card-body">
+            <EditForm method="post" Model="Facility" OnValidSubmit="AddFacility" FormName="create" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary class="alert alert-danger" role="alert" />
+
+                <div class="mb-3">
+                    <label for="facilityname" class="form-label">Facility Name</label>
+                    <InputText id="facilityname" @bind-Value="Facility.FacilityName" class="form-control" placeholder="Enter facility name" />
+                    <ValidationMessage For="() => Facility.FacilityName" class="text-danger" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="facilitydescription" class="form-label">Facility Description</label>
+                    <InputText id="facilitydescription" @bind-Value="Facility.FacilityDescription" class="form-control" placeholder="Enter facility description" />
+                    <ValidationMessage For="() => Facility.FacilityDescription" class="text-danger" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="regionid" class="form-label">Region ID</label>
+                    <InputNumber id="regionid" @bind-Value="Facility.RegionId" class="form-control" placeholder="Enter region ID" />
+                    <ValidationMessage For="() => Facility.RegionId" class="text-danger" />
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a href="/facilities" class="btn btn-outline-secondary">Back to List</a>
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private Facility Facility { get; set; } = new();
+
+    private async Task AddFacility()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Facility.Add(Facility);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/facilities");
+    }
+}

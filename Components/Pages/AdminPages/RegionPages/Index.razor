@@ -1,0 +1,64 @@
+﻿@page "/regions"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using BlazorProperty.Domain
+@using BlazorProperty.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<BlazorProperty.Data.BlazorPropertyContext> DbFactory
+
+<PageTitle>Regions</PageTitle>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="display-4">Regions</h1>
+        <a href="regions/create" class="btn btn-success">
+            <i class="fas fa-plus"></i> Create New
+        </a>
+    </div>
+
+    @if (context == null)
+    {
+        <div class="text-center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <p class="mt-2">Loading regions...</p>
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <QuickGrid Class="table table-hover" Items="context.Region">
+                    <PropertyColumn Property="region => region.RegionName" Sortable="true" Title="Region Name" />
+                    <PropertyColumn Property="region => region.RegionDescription" Sortable="true" Title="Description" />
+
+                    <TemplateColumn Context="region">
+                        <div class="btn-group" role="group">
+                            <a href="@($"regions/edit?regionid={region.RegionId}")" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a href="@($"regions/details?regionid={region.RegionId}")" class="btn btn-sm btn-outline-secondary">
+                                <i class="fas fa-info-circle"></i> Details
+                            </a>
+                            <a href="@($"regions/delete?regionid={region.RegionId}")" class="btn btn-sm btn-outline-danger">
+                                <i class="fas fa-trash-alt"></i> Delete
+                            </a>
+                        </div>
+                    </TemplateColumn>
+                </QuickGrid>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private BlazorPropertyContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}
