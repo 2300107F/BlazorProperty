@@ -3,8 +3,8 @@
     public class Property
     {
         public int PropertyId { get; set; }
+        public string PropertyName { get; set; }
         public string Address { get; set; }
-        public string PostalCode { get; set; }
         public int Price { get; set; }
         public string PropertyType { get; set; }
         public int Bedrooms { get; set; }

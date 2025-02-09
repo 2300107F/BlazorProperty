@@ -22,9 +22,9 @@ namespace BlazorProperty.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            //builder.ApplyConfiguration(new UserSeed());
-            //builder.ApplyConfiguration(new UserRoleSeed());
-            //builder.ApplyConfiguration(new RoleSeed());
+            builder.ApplyConfiguration(new UserSeed());
+            builder.ApplyConfiguration(new UserRoleSeed());
+            builder.ApplyConfiguration(new RoleSeed());
             builder.ApplyConfiguration(new CompanySeed());
             builder.ApplyConfiguration(new RegionSeed());
             builder.ApplyConfiguration(new FacilitySeed());

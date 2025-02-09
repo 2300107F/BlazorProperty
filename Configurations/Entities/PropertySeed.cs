@@ -12,8 +12,8 @@ namespace BlazorProperty.Configurations.Entities
             new Property
             {
                 PropertyId = 1,
+                PropertyName = "Tampines Blk 123 HDB",
                 Address = "Tampines Blk 123",
-                PostalCode = "330022",
                 Price = 1000000,
                 PropertyType = "HDB",
                 Bedrooms = 5,
@@ -25,8 +25,8 @@ namespace BlazorProperty.Configurations.Entities
             new Property
             {
                 PropertyId = 2,
+                PropertyName = "Bedok Blk 456 HDB",
                 Address = "Bedok Blk 456",
-                PostalCode = "123456",
                 Price = 400000,
                 PropertyType = "HDB",
                 Bedrooms = 3,
@@ -38,8 +38,8 @@ namespace BlazorProperty.Configurations.Entities
             new Property
             {
                 PropertyId = 3,
+                PropertyName = "Kallang Blk 123 HDB",
                 Address = "Kallang Blk 123",
-                PostalCode = "364029",
                 Price = 750000,
                 PropertyType = "HDB",
                 Bedrooms = 4,
@@ -51,8 +51,8 @@ namespace BlazorProperty.Configurations.Entities
             new Property
             {
                 PropertyId = 4,
+                PropertyName = "Jurong East Blk456 HDB",
                 Address = "Jurong East Blk456",
-                PostalCode = "326432",
                 Price = 888888,
                 PropertyType = "HDB",
                 Bedrooms = 4,

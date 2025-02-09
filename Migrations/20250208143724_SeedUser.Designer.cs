@@ -4,6 +4,7 @@ using BlazorProperty.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlazorProperty.Migrations
 {
     [DbContext(typeof(BlazorPropertyContext))]
-    partial class BlazorPropertyContextModelSnapshot : ModelSnapshot
+    [Migration("20250208143724_SeedUser")]
+    partial class SeedUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -103,8 +106,8 @@ namespace BlazorProperty.Migrations
                         {
                             Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "5c0fd87e-ff01-402b-b7cd-0227d6899c01",
-                            DateRegistered = new DateTime(2025, 2, 9, 15, 55, 15, 312, DateTimeKind.Local).AddTicks(5076),
+                            ConcurrencyStamp = "6b036519-4ad5-42fe-bb05-84186c769269",
+                            DateRegistered = new DateTime(2025, 2, 8, 22, 37, 23, 769, DateTimeKind.Local).AddTicks(3127),
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -112,9 +115,9 @@ namespace BlazorProperty.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBCjAOnHCp7aSmuDf2ID8e0jq2tyiLQWGkW3F7F3By6q70kW+wwely7Ane3PjgAlTQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKYgycoqoWQio2l9EDiCzMJ0A+1xtH5zKCUncIIIsQRItqZEQiJKvHtNnm9hk30Aig==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b02d5793-7ecb-4fd5-8030-8b88b1926183",
+                            SecurityStamp = "5f75c52d-55fd-4dc1-9b65-6ea84c771712",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         });
@@ -137,7 +140,7 @@ namespace BlazorProperty.Migrations
 
                     b.HasKey("CompanyId");
 
-                    b.ToTable("Company", (string)null);
+                    b.ToTable("Company");
 
                     b.HasData(
                         new
@@ -176,7 +179,7 @@ namespace BlazorProperty.Migrations
 
                     b.HasIndex("RegionId");
 
-                    b.ToTable("Facility", (string)null);
+                    b.ToTable("Facility");
 
                     b.HasData(
                         new
@@ -218,7 +221,7 @@ namespace BlazorProperty.Migrations
 
                     b.HasIndex("PropertyId");
 
-                    b.ToTable("Inquiry", (string)null);
+                    b.ToTable("Inquiry");
                 });
 
             modelBuilder.Entity("BlazorProperty.Domain.Property", b =>
@@ -239,12 +242,12 @@ namespace BlazorProperty.Migrations
                     b.Property<int>("Bedrooms")
                         .HasColumnType("int");
 
-                    b.Property<int>("Price")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PropertyName")
+                    b.Property<string>("PostalCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
 
                     b.Property<string>("PropertyType")
                         .IsRequired()
@@ -260,7 +263,7 @@ namespace BlazorProperty.Migrations
 
                     b.HasIndex("RegionId");
 
-                    b.ToTable("Property", (string)null);
+                    b.ToTable("Property");
 
                     b.HasData(
                         new
@@ -269,8 +272,8 @@ namespace BlazorProperty.Migrations
                             Address = "Tampines Blk 123",
                             Bathrooms = 3,
                             Bedrooms = 5,
+                            PostalCode = "330022",
                             Price = 1000000,
-                            PropertyName = "Tampines Blk 123 HDB",
                             PropertyType = "HDB",
                             RegionId = 1,
                             Sqft = 1100
@@ -281,8 +284,8 @@ namespace BlazorProperty.Migrations
                             Address = "Bedok Blk 456",
                             Bathrooms = 2,
                             Bedrooms = 3,
+                            PostalCode = "123456",
                             Price = 400000,
-                            PropertyName = "Bedok Blk 456 HDB",
                             PropertyType = "HDB",
                             RegionId = 1,
                             Sqft = 700
@@ -293,8 +296,8 @@ namespace BlazorProperty.Migrations
                             Address = "Kallang Blk 123",
                             Bathrooms = 2,
                             Bedrooms = 4,
+                            PostalCode = "364029",
                             Price = 750000,
-                            PropertyName = "Kallang Blk 123 HDB",
                             PropertyType = "HDB",
                             RegionId = 2,
                             Sqft = 890
@@ -305,8 +308,8 @@ namespace BlazorProperty.Migrations
                             Address = "Jurong East Blk456",
                             Bathrooms = 2,
                             Bedrooms = 4,
+                            PostalCode = "326432",
                             Price = 888888,
-                            PropertyName = "Jurong East Blk456 HDB",
                             PropertyType = "HDB",
                             RegionId = 4,
                             Sqft = 888
@@ -332,7 +335,7 @@ namespace BlazorProperty.Migrations
 
                     b.HasIndex("PropertyId");
 
-                    b.ToTable("PropertyImage", (string)null);
+                    b.ToTable("PropertyImage");
                 });
 
             modelBuilder.Entity("BlazorProperty.Domain.Region", b =>
@@ -353,7 +356,7 @@ namespace BlazorProperty.Migrations
 
                     b.HasKey("RegionId");
 
-                    b.ToTable("Region", (string)null);
+                    b.ToTable("Region");
 
                     b.HasData(
                         new

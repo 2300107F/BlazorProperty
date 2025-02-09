@@ -1,0 +1,301 @@
+﻿@page "/AboutUs"
+@rendermode InteractiveServer
+
+<h3>AboutUs</h3>
+
+<style>
+    :root {
+        --primary: #1a365d;
+        --accent: #d4af37;
+        --text-light: #f8f9fa;
+        --text-dark: #2d3748;
+    }
+
+    body {
+        background: linear-gradient(rgba(26, 54, 93, 0.9), rgba(26, 54, 93, 0.95)), url('/images/background.jpg') no-repeat center center fixed;
+        background-size: cover;
+        color: var(--text-light);
+        font-family: 'Roboto', sans-serif;
+        line-height: 1.6;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    header {
+        background: rgba(255, 255, 255, 0.98);
+        padding: 1rem 0;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+
+        header h1 {
+            color: var(--primary);
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+    nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 1rem 0 0;
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+    }
+
+        nav ul li a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+            nav ul li a:hover {
+                color: var(--accent);
+            }
+
+            nav ul li a::after {
+                content: '';
+                position: absolute;
+                bottom: -5px;
+                left: 0;
+                width: 0;
+                height: 2px;
+                background: var(--accent);
+                transition: width 0.3s ease;
+            }
+
+            nav ul li a:hover::after {
+                width: 100%;
+            }
+
+    .about {
+        background: rgba(255, 255, 255, 0.98);
+        padding: 3rem;
+        border-radius: 12px;
+        max-width: 1200px;
+        margin: 2rem auto;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        color: var(--text-dark);
+        flex-grow: 1;
+    }
+
+        .about h2 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+            .about h2::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 60px;
+                height: 3px;
+                background: var(--accent);
+            }
+
+    .section {
+        margin: 2.5rem 0;
+        padding: 2rem;
+        background: rgba(249, 250, 251, 0.9);
+        border-radius: 8px;
+        border-left: 4px solid var(--accent);
+    }
+
+        .section h3 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+            .section h3 i {
+                color: var(--accent);
+            }
+
+        .section ul {
+            padding-left: 1.5rem;
+        }
+
+            .section ul li {
+                margin-bottom: 0.8rem;
+                padding-left: 0.5rem;
+            }
+
+    .team-members {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .team-member {
+        text-align: center;
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .team-member:hover {
+            transform: translateY(-5px);
+        }
+
+        .team-member img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin-bottom: 1.5rem;
+            object-fit: cover;
+            border: 3px solid var(--accent);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .team-member h4 {
+            color: var(--primary);
+            margin: 1rem 0;
+            font-size: 1.3rem;
+        }
+
+        .team-member p {
+            color: #4a5568;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+    footer {
+        background: var(--primary);
+        text-align: center;
+        padding: 2rem;
+        margin-top: auto;
+    }
+
+        footer p {
+            color: var(--text-light);
+            margin: 0.5rem 0;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+            margin: 0 1.5rem;
+            transition: opacity 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+            footer a:hover {
+                opacity: 0.8;
+            }
+
+            footer a i {
+                font-size: 1.2rem;
+            }
+
+    @@media (max-width: 768px) {
+        .about {
+            padding: 1.5rem;
+            margin: 1rem;
+        }
+
+        nav ul {
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .team-member {
+            padding: 1.5rem;
+        }
+    }
+</style>
+
+<header>
+    <h1>SG Realty Listings</h1>
+    <nav>
+        <ul>
+            <li><a href="/"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="/About"><i class="fas fa-info-circle"></i> About</a></li>
+            <li><a href="/Contact"><i class="fas fa-envelope"></i> Contact</a></li>
+            <li><a href="/Properties"><i class="fas fa-building"></i> Properties</a></li>
+        </ul>
+    </nav>
+</header>
+
+<section class="about">
+    <h2>About SG Realty Listings</h2>
+    <p class="lead-text">SG Realty Listings is a premier real estate agency based in Singapore, specializing in residential, commercial, and luxury property listings.</p>
+
+    <div class="section">
+        <h3><i class="fas fa-bullseye"></i> Our Mission</h3>
+        <p>We strive to provide an intuitive property platform with expert guidance, ensuring seamless transactions and transparency for our clients.</p>
+    </div>
+
+    <div class="section">
+        <h3><i class="fas fa-hand-holding-heart"></i> Our Values</h3>
+        <ul>
+            <li><strong>Integrity:</strong> Ethical and transparent dealings.</li>
+            <li><strong>Excellence:</strong> Commitment to top-tier service.</li>
+            <li><strong>Innovation:</strong> Leveraging modern technology for market insights.</li>
+            <li><strong>Customer Centric:</strong> Prioritizing our clients' needs.</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h3><i class="fas fa-users"></i> Our Team</h3>
+        <div class="team-members">
+            <div class="team-member">
+                <img src="~/Images/jiahao.jpg" alt="Jiahao" />
+                <h4>Jiahao - Group Leader</h4>
+                <p>Over 10 years in real estate management, driving innovation and transformation.</p>
+            </div>
+            <div class="team-member">
+                <img src="~/Images/rayner.jpg" alt="Rayner" />
+                <h4>Rayner - Developer</h4>
+                <p>Full-stack expert ensuring seamless platform functionality.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3><i class="fas fa-address-book"></i> Contact Us</h3>
+        <ul class="contact-list">
+            <li><i class="fas fa-envelope"></i> <strong>Email:</strong> info@sgrealty.com</li>
+            <li><i class="fas fa-phone"></i> <strong>Phone:</strong> +65 1234 5678</li>
+            <li><i class="fas fa-map-marker-alt"></i> <strong>Address:</strong> 123 Realty Ave, Singapore 123456</li>
+            <li><i class="fas fa-clock"></i> <strong>Office Hours:</strong> Mon-Fri: 9 AM - 6 PM</li>
+        </ul>
+    </div>
+</section>
+
+<footer>
+    <p>&copy; 2025 SG Realty Listings. All rights reserved.</p>
+    <div>
+        <a href="https://www.facebook.com/SGRealtyListings" target="_blank">
+            <i class="fab fa-facebook"></i> Facebook
+        </a>
+        <a href="https://www.linkedin.com/company/sgrealtylistings" target="_blank">
+            <i class="fab fa-linkedin"></i> LinkedIn
+        </a>
+        <a href="https://twitter.com/SGRealtyListings" target="_blank">
+            <i class="fab fa-twitter"></i> Twitter
+        </a>
+    </div>
+</footer>

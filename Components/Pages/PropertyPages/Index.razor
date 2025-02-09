@@ -18,11 +18,11 @@
 </div>
 
 <QuickGrid TItem="PropertyWithRegion" Class="table table-striped table-bordered" Items="properties">
+    <PropertyColumn Property="property => property.PropertyName">
+        <HeaderTemplate>PropertyName</HeaderTemplate>
+    </PropertyColumn>
     <PropertyColumn Property="property => property.Address">
         <HeaderTemplate>Address</HeaderTemplate>
-    </PropertyColumn>
-    <PropertyColumn Property="property => property.PostalCode">
-        <HeaderTemplate>Postal Code</HeaderTemplate>
     </PropertyColumn>
     <PropertyColumn Property="property => property.Price">
         <HeaderTemplate>Price</HeaderTemplate>
@@ -74,8 +74,8 @@
             .Select(p => new PropertyWithRegion    // LINQ select to project Property and its related region
                 {
                     PropertyId = p.PropertyId,
+                    PropertyName = p.PropertyName,
                     Address = p.Address,
-                    PostalCode = p.PostalCode,
                     Price = p.Price,
                     PropertyType = p.PropertyType,
                     Bedrooms = p.Bedrooms,
@@ -91,8 +91,8 @@
     public class PropertyWithRegion
     {
         public int PropertyId { get; set; }
+        public string PropertyName { get; set; }
         public string Address { get; set; }
-        public string PostalCode { get; set; }
         public decimal Price { get; set; }
         public string PropertyType { get; set; }
         public int Bedrooms { get; set; }

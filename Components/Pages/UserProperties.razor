@@ -1,0 +1,260 @@
+﻿@page "/all-properties"
+@using BlazorProperty.Domain
+@using Microsoft.EntityFrameworkCore
+@inject IDbContextFactory<BlazorProperty.Data.BlazorPropertyContext> DbFactory
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<PageTitle>All Properties - SG Realty Listings</PageTitle>
+
+<!-- Search & Filters Section -->
+<div class="search-filters-container">
+    <div class="search-bar">
+        <input type="text" placeholder="Search by address or postal code..." @bind="SearchText" />
+        <select @bind="SelectedType">
+            <option value="">All Types</option>
+            <option value="HDB">HDB</option>
+            <option value="Condominium">Condo</option>
+            <option value="Landed">Landed</option>
+        </select>
+        <select @bind="SelectedPriceRange">
+            <option value="">Any Price</option>
+            <option value="1">Below S$1M</option>
+            <option value="2">S$1M - S$3M</option>
+            <option value="3">Above S$3M</option>
+        </select>
+        <button class="search-button" @onclick="ApplyFilters">Search</button>
+    </div>
+</div>
+
+<!-- Property Listings -->
+<section class="property-listings">
+    <h2 class="section-title">Discover Properties</h2>
+    <div class="properties-grid">
+        @if (!filteredProperties.Any())
+        {
+            <p class="no-properties-text">No properties found.</p>
+        }
+        else
+        {
+            @foreach (var property in filteredProperties)
+            {
+                <div class="property-card" @onclick="() => ViewDetails(property.PropertyId)">
+                    <div class="property-image-wrapper">
+                        <img src="@(property.PropertyImages?.FirstOrDefault()?.ImageUrl ?? "https://via.placeholder.com/300")" alt="@property.Address" class="property-image" />
+
+
+                        <span class="property-type">@property.PropertyType</span>
+                    </div>
+                    <div class="property-details">
+                        <p class="property-location">@property.PropertyName</p>
+                        <h3 class="property-address">@property.Address</h3>
+                        <p class="property-price">S$ @property.Price.ToString("N0")</p>
+                        <p class="property-bed-bath">@property.Bedrooms Bed | @property.Bathrooms Bath</p>
+                        <button class="details-button">View Details</button>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    @if (PropertyLimit < allProperties.Count)
+    {
+        <button class="load-more-button" @onclick="LoadMoreProperties">View More</button>
+    }
+</section>
+
+<!-- Custom Styling -->
+<style>
+    :root {
+        --primary-color: #1a365d;
+        --accent-color: #d4af37;
+        --text-light: #f8f9fa;
+        --text-dark: #2d3748;
+        --card-bg: #ffffff;
+        --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+        font-family: 'Roboto', sans-serif;
+        margin: 0;
+        padding: 0;
+        color: var(--text-dark);
+    }
+
+    /* Search & Filters */
+    .search-filters-container {
+        text-align: center;
+        padding: 1.5rem;
+        background: #f8f9fa;
+        margin-bottom: 1rem;
+    }
+
+    .search-bar {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
+
+        .search-bar input, .search-bar select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+    .search-button {
+        background: var(--accent-color);
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    /* Property Listings */
+    .properties-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .property-card {
+        background: var(--card-bg);
+        border-radius: 10px;
+        box-shadow: var(--shadow-light);
+        transition: transform 0.2s ease-in-out;
+        cursor: pointer;
+    }
+
+        .property-card:hover {
+            transform: scale(1.03);
+        }
+
+    .property-image-wrapper {
+        position: relative;
+        overflow: hidden;
+        border-radius: 10px 10px 0 0;
+    }
+
+    .property-image {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+        border-radius: 10px 10px 0 0;
+    }
+
+    .property-type {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: rgba(0, 0, 0, 0.6);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 0.9rem;
+    }
+
+    .property-details {
+        padding: 1rem;
+    }
+
+    .property-address {
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+
+    .property-location {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .property-price {
+        font-size: 1.2rem;
+        color: var(--accent-color);
+        font-weight: 600;
+    }
+
+    .property-bed-bath {
+        font-size: 1rem;
+        color: #6c757d;
+        margin-bottom: 1rem;
+    }
+
+    .details-button {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    .load-more-button {
+        display: block;
+        margin: 2rem auto;
+        background: var(--primary-color);
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+</style>
+
+@code {
+    private string SearchText { get; set; }
+    private string SelectedType { get; set; } = "";
+    private string SelectedPriceRange { get; set; } = "";
+
+    private List<Property> allProperties = new();
+    private List<Property> filteredProperties = new();
+    private int PropertyLimit { get; set; } = 4;
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        allProperties = await context.Property.Include(p => p.PropertyImages).ToListAsync();
+        ApplyFilters();
+    }
+
+    private void ApplyFilters()
+    {
+        filteredProperties = allProperties
+            .Where(p => (string.IsNullOrEmpty(SearchText) || p.Address.Contains(SearchText, StringComparison.OrdinalIgnoreCase))
+                        && (string.IsNullOrEmpty(SelectedType) || p.PropertyType == SelectedType)
+                        && (string.IsNullOrEmpty(SelectedPriceRange) || CheckPriceFilter(p.Price)))
+            .Take(PropertyLimit)
+            .ToList();
+    }
+
+    private bool CheckPriceFilter(decimal price)
+    {
+        return SelectedPriceRange switch
+        {
+            "1" => price < 1000000,
+            "2" => price >= 1000000 && price <= 3000000,
+            "3" => price > 3000000,
+            _ => true
+        };
+    }
+
+    private void LoadMoreProperties()
+    {
+        PropertyLimit += 4;
+        filteredProperties = allProperties
+        .Where(p => (string.IsNullOrEmpty(SearchText) || p.Address.Contains(SearchText, StringComparison.OrdinalIgnoreCase))
+                    && (string.IsNullOrEmpty(SelectedType) || p.PropertyType == SelectedType)
+                    && (string.IsNullOrEmpty(SelectedPriceRange) || CheckPriceFilter(p.Price)))
+        .Take(PropertyLimit) // Apply new limit
+        .ToList();
+    }
+
+    private void ViewDetails(int id)
+    {
+        NavigationManager.NavigateTo($"/properties/details/{id}");
+    }
+}

@@ -1,0 +1,134 @@
+﻿@page "/properties/details/{id:int}"
+@using BlazorProperty.Domain
+@using Microsoft.EntityFrameworkCore
+@inject IDbContextFactory<BlazorProperty.Data.BlazorPropertyContext> DbFactory
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Property Details</PageTitle>
+
+@if (property == null)
+{
+    <div class="error-message">
+        <h2>Property Not Found</h2>
+        <p>Sorry, the property you are looking for does not exist.</p>
+        <button class="back-button" @onclick="GoBack">Go Back</button>
+    </div>
+}
+else
+{
+    <div class="property-details-container">
+        <div class="property-header">
+            <h1>@property.PropertyName</h1>
+            <p class="property-location">@property.Address</p>
+            <p class="property-price">S$ @property.Price.ToString("N0")</p>
+        </div>
+
+        <!-- Image Gallery -->
+        <div class="property-images">
+            @if (property.PropertyImages != null && property.PropertyImages.Any())
+            {
+                @foreach (var image in property.PropertyImages)
+                {
+                    <img src="@image.ImageUrl" alt="Property Image" class="property-image" />
+                }
+            }
+            else
+            {
+                <img src="https://via.placeholder.com/600" alt="No Image Available" class="property-image" />
+            }
+        </div>
+
+        <!-- Property Details -->
+        <div class="property-info">
+            <p><strong>Bedrooms:</strong> @property.Bedrooms</p>
+            <p><strong>Bathrooms:</strong> @property.Bathrooms</p>
+            <p><strong>Type:</strong> @property.PropertyType</p>
+            <!--  <p><strong>Description:</strong> </p>  -->
+        </div>
+
+        <button class="back-button" @onclick="GoBack">Back to Listings</button>
+
+    </div>
+}
+
+<style>
+    .property-details-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 20px;
+        background: white;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        text-align: center;
+    }
+
+    .property-header h1 {
+        font-size: 2rem;
+        color: #1a365d;
+    }
+
+    .property-location {
+        color: #6c757d;
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .property-price {
+        font-size: 1.5rem;
+        color: #d4af37;
+        font-weight: bold;
+        margin-bottom: 1rem;
+    }
+
+    .property-images img {
+        width: 100%;
+        max-width: 600px;
+        height: auto;
+        margin: 10px 0;
+        border-radius: 10px;
+    }
+
+    .property-info p {
+        font-size: 1.1rem;
+        margin: 10px 0;
+    }
+
+    .back-button {
+        background: #1a365d;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
+    }
+
+    .back-button:hover {
+        background: #12243d;
+    }
+
+    .error-message {
+        text-align: center;
+        color: red;
+        margin-top: 2rem;
+    }
+</style>
+
+@code {
+    [Parameter] public int id { get; set; } // Get property ID from the URL
+    private Property property;
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        property = await context.Property
+            .Include(p => p.PropertyImages)
+            .FirstOrDefaultAsync(p => p.PropertyId == id);
+    }
+
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo("/all-properties");
+    }
+}

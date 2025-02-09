@@ -1,7 +1,314 @@
 ﻿@page "/"
+@rendermode InteractiveServer
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Home - SG Realty Listings</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="home-container">
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Find Your Dream Property in Singapore</h1>
+            <p class="hero-subtitle">Explore residential, commercial, and luxury properties with expert guidance.</p>
+            <div class="search-bar">
+                <input type="text" placeholder="Search by location, price, or property type..." />
+                <button class="search-button">Search</button>
+            </div>
+        </div>
+    </section>
 
-Welcome to your new app.
+    <!-- Featured Properties Section -->
+    <section class="featured-properties">
+        <h2 class="section-title">Featured Properties</h2>
+        <div class="property-grid">
+            <div class="property-card">
+                <img src="/images/property1.jpg" alt="Property 1" />
+                <div class="property-details">
+                    <h3>Luxury Condo in Marina Bay</h3>
+                    <p class="price">S$ 8,500,000</p>
+                    <p class="location">Marina Bay, Singapore</p>
+                    <button class="view-details-button">View Details</button>
+                </div>
+            </div>
+            <div class="property-card">
+                <img src="/images/property2.jpg" alt="Property 2" />
+                <div class="property-details">
+                    <h3>Modern Apartment in Orchard</h3>
+                    <p class="price">S$ 5,800,000</p>
+                    <p class="location">Orchard Road, Singapore</p>
+                    <button class="view-details-button">View Details</button>
+                </div>
+            </div>
+            <div class="property-card">
+                <img src="/images/property3.jpg" alt="Property 3" />
+                <div class="property-details">
+                    <h3>Family Home in Tampines</h3>
+                    <p class="price">S$ 3,200,000</p>
+                    <p class="location">Tampines, Singapore</p>
+                    <button class="view-details-button">View Details</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div style="text-align: center; margin-top: 2rem;">
+        <NavLink href="/all-properties" class="view-all-button">
+            View All Properties
+        </NavLink>
+    </div>
+
+    <!-- Why Choose Us Section -->
+    <section class="why-choose-us">
+        <h2 class="section-title">Why Choose SG Realty Listings?</h2>
+        <div class="reasons-grid">
+            <div class="reason-card">
+                <i class="fas fa-shield-alt"></i>
+                <h3>Trusted Expertise</h3>
+                <p>Over 10 years of experience in the Singapore real estate market.</p>
+            </div>
+            <div class="reason-card">
+                <i class="fas fa-search-location"></i>
+                <h3>Wide Selection</h3>
+                <p>Explore thousands of properties across Singapore.</p>
+            </div>
+            <div class="reason-card">
+                <i class="fas fa-hand-holding-heart"></i>
+                <h3>Personalized Service</h3>
+                <p>Tailored recommendations to meet your needs.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="cta-section">
+        <h2>Ready to Find Your Dream Home?</h2>
+        <p>Contact us today to get started on your property journey.</p>
+        <button class="cta-button">Get Started</button>
+    </section>
+</div>
+
+<style>
+    /* Global Styles */
+    :root {
+        --primary-color: #1a365d;
+        --accent-color: #d4af37;
+        --text-light: #f8f9fa;
+        --text-dark: #2d3748;
+    }
+
+    body {
+        font-family: 'Roboto', sans-serif;
+        margin: 0;
+        padding: 0;
+        color: var(--text-dark);
+    }
+
+    .home-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+
+    /* Hero Section */
+    .hero-section {
+        background: linear-gradient(rgba(26, 54, 93, 0.8), rgba(26, 54, 93, 0.8)), url('/images/hero-bg.jpg') no-repeat center center/cover;
+        color: var(--text-light);
+        padding: 6rem 1rem;
+        text-align: center;
+    }
+
+    .hero-title {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+    }
+
+    .search-bar {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+        .search-bar input {
+            padding: 0.8rem;
+            border: none;
+            border-radius: 8px;
+            width: 400px;
+            font-size: 1rem;
+        }
+
+    .search-button {
+        background: var(--accent-color);
+        color: var(--text-light);
+        border: none;
+        padding: 0.8rem 2rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background 0.3s ease;
+    }
+
+        .search-button:hover {
+            background: #b38f2a;
+        }
+
+    /* Featured Properties Section */
+    .featured-properties {
+        padding: 4rem 0;
+    }
+
+    .section-title {
+        text-align: center;
+        font-size: 2.2rem;
+        margin-bottom: 2rem;
+        color: var(--primary-color);
+    }
+
+    .property-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+
+    .property-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+        .property-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .property-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+    .property-details {
+        padding: 1.5rem;
+    }
+
+        .property-details h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+        }
+
+    .price {
+        font-size: 1.2rem;
+        color: var(--accent-color);
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .location {
+        font-size: 1rem;
+        color: #6c757d;
+        margin-bottom: 1rem;
+    }
+
+    .view-details-button {
+        background: var(--primary-color);
+        color: var(--text-light);
+        border: none;
+        padding: 0.8rem 1.5rem;
+        border-radius: 8px;
+        cursor: pointer;
+        width: 100%;
+        transition: background 0.3s ease;
+    }
+
+        .view-details-button:hover {
+            background: #12243d;
+        }
+    /* View more properties*/
+    .view-all-button {
+        background: var(--primary-color);
+        color: var(--text-light);
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+        border-radius: 8px;
+        text-decoration: none;
+        display: inline-block;
+        transition: background 0.3s ease;
+    }
+
+        .view-all-button:hover {
+            background: #12243d;
+        }
+    /* Why Choose Us Section */
+    .why-choose-us {
+        background: #f8f9fa;
+        padding: 4rem 0;
+    }
+
+    .reasons-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+    }
+
+    .reason-card {
+        text-align: center;
+        padding: 2rem;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+        .reason-card i {
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .reason-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .reason-card p {
+            font-size: 1rem;
+            color: #6c757d;
+        }
+
+    /* Call to Action Section */
+    .cta-section {
+        background: var(--primary-color);
+        color: var(--text-light);
+        text-align: center;
+        padding: 4rem 1rem;
+        margin-top: 4rem;
+    }
+
+        .cta-section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+    .cta-button {
+        background: var(--accent-color);
+        color: var(--text-light);
+        border: none;
+        padding: 1rem 2.5rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1.1rem;
+        transition: background 0.3s ease;
+    }
+
+        .cta-button:hover {
+            background: #b38f2a;
+        }
+</style>

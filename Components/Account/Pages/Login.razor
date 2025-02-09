@@ -1,5 +1,4 @@
 ﻿@page "/Account/Login"
-
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
@@ -10,57 +9,55 @@
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 
-<PageTitle>Log in</PageTitle>
+<PageTitle>Login - SG Realty Listings</PageTitle>
 
-<h1>Log in</h1>
-<div class="row">
-    <div class="col-md-4">
-        <section>
-            <StatusMessage Message="@errorMessage" />
-            <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
-                <DataAnnotationsValidator />
-                <h2>Use a local account to log in.</h2>
-                <hr />
-                <ValidationSummary class="text-danger" role="alert" />
-                <div class="form-floating mb-3">
-                    <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                    <label for="email" class="form-label">Email</label>
-                    <ValidationMessage For="() => Input.Email" class="text-danger" />
-                </div>
-                <div class="form-floating mb-3">
-                    <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-                    <label for="password" class="form-label">Password</label>
-                    <ValidationMessage For="() => Input.Password" class="text-danger" />
-                </div>
-                <div class="checkbox mb-3">
-                    <label class="form-label">
-                        <InputCheckbox @bind-Value="Input.RememberMe" class="darker-border-checkbox form-check-input" />
-                        Remember me
-                    </label>
-                </div>
-                <div>
-                    <button type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
-                </div>
-                <div>
-                    <p>
-                        <a href="Account/ForgotPassword">Forgot your password?</a>
-                    </p>
-                    <p>
-                        <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Register as a new user</a>
-                    </p>
-                    <p>
-                        <a href="Account/ResendEmailConfirmation">Resend email confirmation</a>
-                    </p>
-                </div>
-            </EditForm>
-        </section>
-    </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Use another service to log in.</h3>
+<div class="login-container">
+    <div class="login-card">
+        <h1 class="login-title">Welcome Back</h1>
+        <p class="login-subtitle">Log in to your account to continue.</p>
+
+        <StatusMessage Message="@errorMessage" />
+
+        <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
+            <DataAnnotationsValidator />
+            <ValidationSummary class="validation-summary" role="alert" />
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="Enter your email" />
+                <ValidationMessage For="() => Input.Email" class="validation-message" />
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Enter your password" />
+                <ValidationMessage For="() => Input.Password" class="validation-message" />
+            </div>
+
+            <div class="form-group remember-me">
+                <label class="remember-me-label">
+                    <InputCheckbox @bind-Value="Input.RememberMe" class="remember-me-checkbox" />
+                    Remember me
+                </label>
+            </div>
+
+            <button type="submit" class="submit-button">
+                Log In
+                <i class="fas fa-arrow-right"></i>
+            </button>
+        </EditForm>
+
+        <div class="login-links">
+            <a href="Account/ForgotPassword" class="login-link">Forgot your password?</a>
+            <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))" class="login-link">Register as a new user</a>
+            <a href="Account/ResendEmailConfirmation" class="login-link">Resend email confirmation</a>
+        </div>
+
+        <div class="external-login-section">
+            <h3>Or log in with</h3>
             <hr />
             <ExternalLoginPicker />
-        </section>
+        </div>
     </div>
 </div>
 
@@ -114,11 +111,11 @@
 
     private sealed class InputModel
     {
-        [Required]
-        [EmailAddress]
+        [Required(ErrorMessage = "Email is required.")]
+        [EmailAddress(ErrorMessage = "Invalid email address.")]
         public string Email { get; set; } = "";
 
-        [Required]
+        [Required(ErrorMessage = "Password is required.")]
         [DataType(DataType.Password)]
         public string Password { get; set; } = "";
 
@@ -126,3 +123,174 @@
         public bool RememberMe { get; set; }
     }
 }
+
+<style>
+    /* Global Styles */
+    :root {
+        --primary-color: #1a365d;
+        --accent-color: #d4af37;
+        --text-light: #f8f9fa;
+        --text-dark: #2d3748;
+        --error-color: #dc3545;
+    }
+
+    .login-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 2rem;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+
+    .login-card {
+        background: white;
+        border-radius: 20px;
+        padding: 3rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        width: 100%;
+    }
+
+    .login-title {
+        font-size: 2rem;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+        text-align: center;
+    }
+
+    .login-subtitle {
+        font-size: 1.1rem;
+        color: #6c757d;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .validation-summary {
+        color: var(--error-color);
+        background: rgba(220, 53, 69, 0.1);
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+    .form-control {
+        width: 100%;
+        padding: 0.8rem;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+    }
+
+        .form-control:focus {
+            border-color: var(--accent-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+        }
+
+    .remember-me {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .remember-me-label {
+        font-size: 0.95rem;
+        color: #6c757d;
+        margin-left: 0.5rem;
+    }
+
+    .remember-me-checkbox {
+        width: 1rem;
+        height: 1rem;
+        accent-color: var(--accent-color);
+    }
+
+    .submit-button {
+        background: var(--primary-color);
+        color: var(--text-light);
+        width: 100%;
+        padding: 1rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.8rem;
+    }
+
+        .submit-button:hover {
+            background: #12243d;
+        }
+
+        .submit-button i {
+            transition: transform 0.3s ease;
+        }
+
+        .submit-button:hover i {
+            transform: translateX(3px);
+        }
+
+    .login-links {
+        margin-top: 1.5rem;
+        text-align: center;
+    }
+
+    .login-link {
+        display: block;
+        color: var(--primary-color);
+        text-decoration: none;
+        margin: 0.5rem 0;
+        transition: color 0.3s ease;
+    }
+
+        .login-link:hover {
+            color: var(--accent-color);
+        }
+
+    .external-login-section {
+        margin-top: 2rem;
+        text-align: center;
+    }
+
+        .external-login-section h3 {
+            font-size: 1.1rem;
+            color: #6c757d;
+            margin-bottom: 1rem;
+        }
+
+        .external-login-section hr {
+            border-color: #e9ecef;
+            margin-bottom: 1.5rem;
+        }
+
+    @@media (max-width: 768px) {
+        .login-card {
+            padding: 2rem;
+        }
+
+        .login-title {
+            font-size: 1.8rem;
+        }
+
+        .login-subtitle {
+            font-size: 1rem;
+        }
+    }
+</style>

@@ -18,18 +18,18 @@
                         <DataAnnotationsValidator />
                         <ValidationSummary class="text-danger" role="alert" />
 
+                        <!-- Property Name Field -->
+                        <div class="mb-4">
+                            <label for="propertyname" class="form-label fw-bold"><i class="bi bi-mailbox"></i> Property Name</label>
+                            <InputText id="propertyname" @bind-Value="Property.PropertyName" class="form-control" placeholder="Enter property name" />
+                            <ValidationMessage For="() => Property.PropertyName" class="text-danger" />
+                        </div>
+
                         <!-- Address Field -->
                         <div class="mb-4">
                             <label for="address" class="form-label fw-bold"><i class="bi bi-geo-alt-fill"></i> Address</label>
                             <InputText id="address" @bind-Value="Property.Address" class="form-control" placeholder="Enter address" />
                             <ValidationMessage For="() => Property.Address" class="text-danger" />
-                        </div>
-
-                        <!-- Postal Code Field -->
-                        <div class="mb-4">
-                            <label for="postalcode" class="form-label fw-bold"><i class="bi bi-mailbox"></i> Postal Code</label>
-                            <InputText id="postalcode" @bind-Value="Property.PostalCode" class="form-control" placeholder="Enter postal code" />
-                            <ValidationMessage For="() => Property.PostalCode" class="text-danger" />
                         </div>
 
                         <!-- Price Field -->

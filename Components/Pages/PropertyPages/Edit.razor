@@ -23,14 +23,14 @@ else
                 <ValidationSummary role="alert"/>
                 <input type="hidden" name="Property.PropertyId" value="@Property.PropertyId" />
                 <div class="mb-3">
+                    <label for="propertyname" class="form-label">Property Name:</label>
+                    <InputText id="propertyname" @bind-Value="Property.PropertyName" class="form-control" />
+                    <ValidationMessage For="() => Property.PropertyName" class="text-danger" />
+                </div>
+                <div class="mb-3">
                     <label for="address" class="form-label">Address:</label>
                     <InputText id="address" @bind-Value="Property.Address" class="form-control" />
                     <ValidationMessage For="() => Property.Address" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="postalcode" class="form-label">PostalCode:</label>
-                    <InputText id="postalcode" @bind-Value="Property.PostalCode" class="form-control" />
-                    <ValidationMessage For="() => Property.PostalCode" class="text-danger" />
                 </div>
                 <div class="mb-3">
                     <label for="price" class="form-label">Price:</label>
