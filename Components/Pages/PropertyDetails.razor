@@ -43,7 +43,32 @@ else
             <p><strong>Bedrooms:</strong> @property.Bedrooms</p>
             <p><strong>Bathrooms:</strong> @property.Bathrooms</p>
             <p><strong>Type:</strong> @property.PropertyType</p>
+
+            <!-- Display Region Name -->
+            <p><strong>Region:</strong> @property.Region?.RegionName</p>
+
+            <!-- Display Facilities linked to the Region -->
+            <p>
+                <strong>Facilities:</strong>
+                @if (property.Region?.Facilities != null && property.Region.Facilities.Any())
+                {
+                    @foreach (var facility in property.Region.Facilities)
+                    {
+                        <span>@facility.FacilityName</span> <!-- Display Facility Name -->
+                        @if (property.Region.Facilities.Last() != facility)
+                        {
+                            <span>, </span> <!-- Add commas between facilities -->
+                        }
+                    }
+                }
+                else
+                {
+                    <span>No facilities available</span>
+                }
+            </p>
         </div>
+
+
 
         <!-- Messaging Section -->
         <div class="messaging-section">
@@ -219,6 +244,8 @@ else
     {
         using var context = DbFactory.CreateDbContext();
         property = await context.Property
+            .Include(p => p.Region)   // Include Region to load it
+            .ThenInclude(r => r.Facilities) // Eager load Facilities related to the Region
             .Include(p => p.PropertyImages)
             .FirstOrDefaultAsync(p => p.PropertyId == id);
 
